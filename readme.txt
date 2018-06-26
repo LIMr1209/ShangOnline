@@ -5,3 +5,8 @@
 def func():
    pass
 '''
+...js
+function func(){
+   print('111')
+}
+...
