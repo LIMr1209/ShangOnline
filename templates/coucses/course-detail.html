@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}公开课详情——尚在线
+{% endblock %}
+<!--crumbs start-->
+{% block content %}
+    <section>
+        <div class="wp">
+            <div class="crumbs">
+                <ul>
+                    <li><a href="/">首页</a>></li>
+                    <li><a href="{% url 'courses:course_list' %}">公开课程</a>></li>
+                    <li>课程详情</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+
+    <section>
+        <div class="wp">
+            <div class="groupPurchase_detail detail">
+                <div class="toppro">
+                    <div class="left">
+                        <div class="picbox">
+                            <div class="tb-booth tb-pic">
+                                <img width="440" height="445" src="{{ MEDIA_URL }}{{ course.image }}" class="jqzoom"/>
+                            </div>
+
+                        </div>
+                        <div class="des">
+                            <h1>{{ course.name }}</h1>
+                            <span class="key">{{ course.desc }}</span>
+                            <div class="prize">
+                                <span class="fl">难度：<i class="key">{{ course.level }}</i></span>
+                                <span class="fr">学习人数：{{ course.stu_num }}</span>
+                            </div>
+                            <ul class="parameter">
+                                <li><span
+                                        class="pram word3">时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;长：</span><span>{{ course.study_time }}</span>
+                                </li>
+                                <li><span class="pram word3">章&nbsp;节&nbsp;数：</span><span>{{ course.lesson_num }}</span>
+                                </li>
+                                <li><span class="pram word3">课程类别：</span><span title="">{{ course.category }}</span>
+                                </li>
+                                <li class="piclist"><span class="pram word4">学习用户：</span>
+                                    {% for usercourse in course.usercourseinfo_set.all %}
+                                        <span class="pic"><img width="40" height="40" src="
+                                                {{ MEDIA_URL }}{{ usercourse.userinfo.image }}"/></span>
+                                    {% endfor %}
+                                </li>
+                            </ul>
+                            <div class="btns">
+                                <div class="btn colectgroupbtn" id="jsLeftBtn" data-fav-type="2">
+                                    {% if is_love_course %}取消收藏{% else %}收藏{% endif %}
+                                </div>
+                                <div class="buy btn"><a style="color: white"
+                                                        href="{% url 'courses:course_video' course.id %}">开始学习</a></div>
+                            </div>
+                        </div>
+                        <div class="group-share-box">
+                            <div class="bdsharebuttonbox"
+                                 data-text="django开始了"
+                                 data-desc="我在#慕课网#发现了"
+                                 data-comment=""
+                                 data-url="/group/groupdetail/15/">
+                                <span class="fl">分享到：</span>
+                                <a href="#" class="bds_more" data-cmd="more"></a>
+                                <a title="分享到QQ空间" href="#" class="bds_qzone" data-cmd="qzone"></a>
+                                <a title="分享到新浪微博" href="#" class="bds_tsina" data-cmd="tsina"></a>
+                                <a title="分享到腾讯微博" href="#" class="bds_tqq" data-cmd="tqq"></a>
+                                <a title="分享到人人网" href="#" class="bds_renren" data-cmd="renren"></a>
+                                <a title="分享到微信" href="#" class="bds_weixin" data-cmd="weixin"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right">
+                        <div class="head">
+                            <h1>授课机构</h1>
+                            <p>世界名校，课程权威</p>
+                        </div>
+                        <div class="pic">
+                            <a href="{% url 'orgs:org_detail' course.orginfo.id %}">
+                                <img width="150" height="80" src="{{ MEDIA_URL }}{{ course.orginfo.image }}"/>
+                            </a>
+                        </div>
+                        <a href="{% url 'orgs:org_detail' course.orginfo.id %}">
+                            <h2 class="center" title="{{ course.orginfo.name }}">{{ course.orginfo.name }}</h2>
+                        </a>
+                        <div class="btn" data-favid="14" id="jsRightBtn" data-fav-type="1">
+                            {% if is_love_org %}取消收藏{% else %}收藏{% endif %}
+                        </div>
+                        <div class="clear">
+                            <ul>
+                                <li>
+                                    <span>课 &nbsp;程&nbsp; 数：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ course.orginfo.course_num }}</span>
+                                </li>
+                                <li>
+                                    <span>教 &nbsp;师&nbsp; 数：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ course.orginfo.teacherinfo_set.count }}</span>
+                                </li>
+                                <li>所在地区：&nbsp;&nbsp;{{ course.orginfo.cityinfo.name }}</li>
+                                <li>认&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;证&nbsp;:
+                                    &nbsp;&nbsp;
+                                    <img title="金牌机构" src="{% static 'images/gold.png' %}"/>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="wp">
+            <div class="list groupPurchase_detail_pro">
+                <div class="left layout">
+                    <div class="head">
+                        <ul class="tab_header">
+                            <li class="active">课程详情</li>
+                        </ul>
+                    </div>
+                    <div class="tab_cont tab_cont1">
+
+                        {{ course.detail }}
+                    </div>
+                    <div class="tab_cont tab_cont2">
+                        <div class="comment">
+                            <div class="comenlist">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="right layout">
+                    <div class="head">相关课程推荐</div>
+                    <div class="group_recommend">
+                        {% for rec in rec_courses %}
+                            {% if rec == course %}
+                            {% else %}
+                                <dl>
+                                    <dt>
+                                        <a target="_blank" href="{% url 'courses:course_detail' rec.id %}">
+                                            <img width="240" height="220" class="scrollLoading"
+                                                 src="{{ MEDIA_URL }}{{ rec.image }}"/>
+                                        </a>
+                                    </dt>
+                                    <dd>
+                                        <a target="_blank" href="{% url 'courses:course_detail' rec.id %}">
+                                            <h2> {{ rec.name }}</h2></a>
+                                        <span class="fl">学习时长：<i class="key">{{ rec.study_time }}</i></span>
+                                    </dd>
+                                </dl>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block myjs %}
+    <script>
+        $(function () {
+            $('#jsRightBtn').click(function () {
+                {#  attr 和 prop 两种操作标签属性的方法，#}
+                {#区别：attr是用来取或者设置自定义的属性#}
+                {#      prop是用来取或者设置标签自带的属性#}
+                var lovetype = $(this).attr('data-fav-type');
+                var loveid = {{ course.orginfo.id }}
+                    $.ajax({
+                        type: 'GET',
+                        url: '{% url 'operations:user_love' %}',
+                        data: {
+                            lovetype: lovetype,
+                            loveid: loveid
+                        },
+                        success: function (callback) {
+                            if (callback.status == 'ok') {
+                                $('#jsRightBtn').text(callback.msg)
+                            } else if (callback.status == 'nologin') {
+                                window.location.href = '{% url 'users:user_login' %}'
+                            } else {
+                                alert(callback.msg)
+                            }
+                        }
+
+                    })
+            })
+        });
+        $(function () {
+            $('#jsLeftBtn').click(function () {
+                {#  attr 和 prop 两种操作标签属性的方法，#}
+                {#区别：attr是用来取或者设置自定义的属性#}
+                {#      prop是用来取或者设置标签自带的属性#}
+                var lovetype = $(this).attr('data-fav-type');
+                var loveid = {{ course.id }};
+                $.ajax({
+                    type: 'GET',
+                    url: '{% url 'operations:user_love' %}',
+                    data: {
+                        lovetype: lovetype,
+                        loveid: loveid
+                    },
+                    success: function (callback) {
+                        if (callback.status == 'ok') {
+                            $('#jsLeftBtn').text(callback.msg)
+                        } else if (callback.status == 'nologin') {
+                            window.location.href = '{% url 'users:user_login' %}'
+                        } else {
+                            alert(callback.msg)
+                        }
+                    }
+
+                })
+            })
+        });
+    </script>
+{% endblock %}

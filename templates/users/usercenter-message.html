@@ -1,0 +1,61 @@
+{% extends 'users/usercenter-base.html' %}
+{% block title %}个人中心——尚在线{% endblock %}
+{% block breach %}个人消息{% endblock %}
+{% block right %}
+    <div class="right" >
+		<div class="personal_des Releasecont">
+			<div class="head">
+				<h1>我的消息</h1>
+			</div>
+
+		</div>
+		<div class="personal_des permessage">
+			<div class="head">
+				<ul class="tab_header messagehead">
+					<li class="active"><a href="#">个人消息</a> </li>
+				</ul>
+
+
+			</div>
+			<div class="messagelist">
+                {% for message in all_messages reversed %}
+                    <div class="messages" msg-id="{{ message.id }}">
+                        <div class="fr">
+                            <div class="top"><span class="fl time">{{ message.add_time }}</span><span class="fr btn foldbtn"></span></div>
+                            <p>
+                                {{ message.message }}
+                            </p>
+                        </div>
+                    </div>
+                {% endfor %}
+			</div>
+			<div class="pageturn pagerright">
+                <ul class="pagelist">
+                    <li class="active"><a href="?page=1">1</a></li>
+                </ul>
+            </div>
+		</div>
+
+	</div>
+{% endblock %}
+{% block myjs1 %}
+    <script>
+        $(function () {
+            $(".messages").click(function () {
+                var msgid = $(this).attr('msg-id');
+                $.ajax({
+                    url:'{% url 'users:user_readmsg' %}',
+                    type:'GET',
+                    data:{msgid:msgid},
+                    success:function (callback) {
+                        if(callback.status == 'ok'){
+                            window.location.reload()
+                        }else {
+                            alert(callback.msg)
+                        }
+                    }
+                })
+            })
+        })
+    </script>
+{% endblock %}
