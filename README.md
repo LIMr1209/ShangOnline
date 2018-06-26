@@ -1,12 +1,13 @@
 # 一级标题
 ## 二级标题
 ### 三级标题
-...py
+```py
 def func():
    pass
-...
-...js
+```
+
+```js
 function func(){
    print('111')
 }
-...
+```
